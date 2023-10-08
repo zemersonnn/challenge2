@@ -1,2 +1,2 @@
 # challenge2
-challenge 2 hw for bootcamp
+Homework 2 for bootcamp - VBA challenge
