@@ -1,0 +1,116 @@
+Sub ticker()
+
+    Dim ws As Worksheet
+    
+    Dim open_value As Double
+    open_value = 0
+    Dim close_value As Double
+    close_value = 0
+    Dim yearly_change As Double
+    yearly_change = 0
+    Dim percent_change As Double
+    percent_change = 0
+    Dim total As Double
+    
+    Dim ticker As String
+    Dim summary As Integer
+    
+    Dim greatest_increase As String
+    Dim greatest_decrease As String
+    Dim greatest_total As String
+    
+    
+    On Error Resume Next
+    
+    For Each ws In ThisWorkbook.Worksheets
+    
+        ' Adding the header
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+    
+        summary = 2
+    
+        For i = 2 To 753001
+    
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+        
+                ticker = ws.Cells(i, 1).Value
+            
+                ' total = ws.Cells(i, 7).Value + total
+        
+                open_value = ws.Cells(i, 3).Value
+        
+                close_value = ws.Cells(i, 6).Value
+        
+                yearly_change = close_value - open_value
+            
+                ' Need to store and add to yearly change
+                If open_value <> 0 Then
+                
+                    ' yearly_change = close_value - open_value
+                
+                    percent_change = (yearly_change / open_value) * 100
+                    
+                Else
+                
+                    percent_change = 0
+                
+                End If
+                
+                ' percent_change = (yearly_change / open_value) * 100
+        
+                ' insert values
+                ws.Cells(summary, 9).Value = ticker
+                ws.Cells(summary, 10).Value = yearly_change
+                ws.Cells(summary, 11).Value = percent_change
+                ws.Cells(summary, 12).Value = total
+        
+                'summary = summary + 1
+            
+                'total = 0
+                
+                'open_value = ws.Cells(i + 1, 3)
+                'close_value = ws.Cells(i + 1, 6)
+               
+        ws.Columns("K").NumberFormat = "0.00%"
+    
+    If yearly_change > 0 Then
+    
+        ws.Cells(summary, 10).Interior.Color = RGB(0, 255, 0)
+        
+    ElseIf yearly_change < 0 Then
+    
+        ws.Cells(summary, 10).Interior.Color = RGB(225, 0, 0)
+        
+    End If
+    
+        summary = summary + 1
+            
+        total = 0
+       
+        open_value = ws.Cells(i + 1, 3)
+        ' close_value = ws.Cells(i + 1, 6)
+    Else
+        total = total + ws.Cells(i, 7).Value
+    End If
+    
+    ' Greatest increase %
+    ' Greatest decrease %
+    ' Greatest total volume
+    
+    greatest_increase = WorksheetFunction.Max(Range(Cells(2, "K"), Cells(753001, "K")))
+    greatest_decrease = WorksheetFunction.Min(Range(Cells(2, "K"), Cells(753001, "K")))
+    greatest_total = WorksheetFunction.Max(Range(Cells(2, "L"), Cells(753001, "L")))
+    
+     ws.Cells(1, 17).Value = "Ticker"
+     ws.Cells(1, 18).Value = "Value"
+     
+    
+    Next i
+      
+    Next ws
+         
+End Sub
+
